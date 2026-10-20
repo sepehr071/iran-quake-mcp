@@ -2,7 +2,7 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.sepehr071/iran-quake-mcp",
   "title": "Iran Earthquakes",
-  "description": "Unofficial read-only Iran earthquakes: latest, search, strongest, detail and stats from USGS, EMSC and IRSC.",
+  "description": "Unofficial read-only Iran earthquakes: latest, search, strongest, detail, stats (USGS, EMSC, IRSC).",
   "repository": {
     "url": "https://github.com/sepehr071/iran-quake-mcp",
     "source": "github"
