@@ -1,0 +1,221 @@
+{
+"type": "FeatureCollection",
+"features": [
+{
+"type": "Feature",
+"geometry": {
+"type": "Point",
+"coordinates": [
+44.1869,
+37.9094,
+-4.3
+]
+},
+"id": "20250625_0000047",
+"properties": {
+"time": "2025-06-25T04:23:16.0Z",
+"flynn_region": "TURKEY-IRAN-IRAQ BORDER REGION",
+"lat": 37.9094,
+"lon": 44.1869,
+"depth": 4.3,
+"mag": 3.0,
+"magtype": "ml",
+"auth": "AFAD",
+"lastupdate": "2025-06-25T04:32:22.261228Z",
+"evtype": "ke"
+}
+},
+{
+"type": "Feature",
+"geometry": {
+"type": "Point",
+"coordinates": [
+44.1012,
+37.2302,
+-10.0
+]
+},
+"id": "20250311_0000275",
+"properties": {
+"time": "2025-03-11T18:03:21.22Z",
+"flynn_region": "TURKEY-IRAN-IRAQ BORDER REGION",
+"lat": 37.2302,
+"lon": 44.1012,
+"depth": 10.0,
+"mag": 4.6,
+"magtype": "mb",
+"auth": "EMSC",
+"lastupdate": "2025-03-12T07:50:11.907817Z",
+"evtype": "ke"
+}
+},
+{
+"type": "Feature",
+"geometry": {
+"type": "Point",
+"coordinates": [
+49.949,
+28.077,
+-12.0
+]
+},
+"id": "20240817_0000268",
+"properties": {
+"time": "2024-08-17T21:13:11.0Z",
+"flynn_region": "PERSIAN GULF",
+"lat": 28.077,
+"lon": 49.949,
+"depth": 12.0,
+"mag": 4.1,
+"magtype": "ml",
+"auth": "IIEES",
+"lastupdate": "2024-08-18T05:03:54.156381Z",
+"evtype": "ke"
+}
+},
+{
+"type": "Feature",
+"geometry": {
+"type": "Point",
+"coordinates": [
+57.79,
+37.81,
+-9.0
+]
+},
+"id": "20250422_0000054",
+"properties": {
+"time": "2025-04-22T04:47:41.0Z",
+"flynn_region": "NORTHEASTERN IRAN",
+"lat": 37.81,
+"lon": 57.79,
+"depth": 9.0,
+"mag": 3.3,
+"magtype": "m",
+"auth": "IGUT",
+"lastupdate": "2025-04-22T05:21:37.889732Z",
+"evtype": "ke"
+}
+},
+{
+"type": "Feature",
+"geometry": {
+"type": "Point",
+"coordinates": [
+48.5632,
+38.7271,
+-21.0
+]
+},
+"id": "20250731_0000175",
+"properties": {
+"time": "2025-07-31T10:03:38.97Z",
+"flynn_region": "AZERBAIJAN",
+"lat": 38.7271,
+"lon": 48.5632,
+"depth": 21.0,
+"mag": 3.6,
+"magtype": "ml",
+"auth": "EMSC",
+"lastupdate": "2025-07-31T11:17:20.496284Z",
+"evtype": "ke"
+}
+},
+{
+"type": "Feature",
+"geometry": {
+"type": "Point",
+"coordinates": [
+49.5557,
+39.5718,
+-45.0
+]
+},
+"id": "20250307_0000049",
+"properties": {
+"time": "2025-03-07T04:21:41.62Z",
+"flynn_region": "CASPIAN SEA, OFFSHORE AZERBAIJAN",
+"lat": 39.5718,
+"lon": 49.5557,
+"depth": 45.0,
+"mag": 4.3,
+"magtype": "mb",
+"auth": "EMSC",
+"lastupdate": "2025-03-07T07:25:57.510324Z",
+"evtype": "ke"
+}
+},
+{
+"type": "Feature",
+"geometry": {
+"type": "Point",
+"coordinates": [
+45.3934,
+34.5163,
+-9.1
+]
+},
+"id": "20250303_0000206",
+"properties": {
+"time": "2025-03-03T20:53:22.4Z",
+"flynn_region": "IRAN-IRAQ BORDER REGION",
+"lat": 34.5163,
+"lon": 45.3934,
+"depth": 9.1,
+"mag": 4.4,
+"magtype": "mb",
+"auth": "EMSC",
+"lastupdate": "2025-03-04T07:41:51.683413Z",
+"evtype": "ke"
+}
+},
+{
+"type": "Feature",
+"geometry": {
+"type": "Point",
+"coordinates": [
+54.3989,
+26.1651,
+-10.0
+]
+},
+"id": "20260806_0000373",
+"properties": {
+"time": "2026-08-06T06:42:38.204Z",
+"flynn_region": "SOUTHERN IRAN",
+"lat": 26.1651,
+"lon": 54.3989,
+"depth": 10.0,
+"mag": 4.0,
+"magtype": "mb",
+"auth": "NEIC",
+"lastupdate": "2026-08-12T11:16:06.087709Z",
+"evtype": "ke"
+}
+},
+{
+"type": "Feature",
+"geometry": {
+"type": "Point",
+"coordinates": [
+44.8135,
+37.6895,
+-10.0
+]
+},
+"id": "20261014_0000009",
+"properties": {
+"time": "2026-10-14T00:50:10.0Z",
+"flynn_region": "TURKEY-IRAN-IRAQ BORDER REGION",
+"lat": 37.6895,
+"lon": 44.8135,
+"depth": 10.0,
+"mag": 1.6,
+"magtype": "ml",
+"auth": "EMSC",
+"lastupdate": "2026-10-14T01:00:00Z",
+"evtype": "ke"
+}
+}
+]
+}

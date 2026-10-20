@@ -1,0 +1,149 @@
+{
+"type": "FeatureCollection",
+"features": [
+{
+"type": "Feature",
+"id": "us7000teag",
+"geometry": {
+"type": "Point",
+"coordinates": [
+45.4481,
+34.4025,
+10
+]
+},
+"properties": {
+"mag": 4.2,
+"place": "38 km W of Sarpol-e Z̄ahāb, Iran",
+"time": 1787987702251,
+"magType": "mb"
+}
+},
+{
+"type": "Feature",
+"id": "us7000sqya",
+"geometry": {
+"type": "Point",
+"coordinates": [
+46.42,
+32.8833,
+10
+]
+},
+"properties": {
+"mag": 4.2,
+"place": "35 km SE of Mehrān, Iran",
+"time": 1780313073561,
+"magType": "mb"
+}
+},
+{
+"type": "Feature",
+"id": "us6000rnxv",
+"geometry": {
+"type": "Point",
+"coordinates": [
+50.0367,
+28.1665,
+10
+]
+},
+"properties": {
+"mag": 4.4,
+"place": "118 km SW of Bushehr, Iran",
+"time": 1763480794669,
+"magType": "mb"
+}
+},
+{
+"type": "Feature",
+"id": "us6000tjyv",
+"geometry": {
+"type": "Point",
+"coordinates": [
+54.3989,
+26.1651,
+10
+]
+},
+"properties": {
+"mag": 4,
+"place": "57 km SE of Kīsh, Iran",
+"time": 1785998558204,
+"magType": "mb"
+}
+},
+{
+"type": "Feature",
+"id": "us6000s5g9",
+"geometry": {
+"type": "Point",
+"coordinates": [
+48.0921,
+30.9224,
+10
+]
+},
+"properties": {
+"mag": 4.2,
+"place": "49 km NE of Al Hārithah, Iraq",
+"time": 1768216270943,
+"magType": "mb"
+}
+},
+{
+"type": "Feature",
+"id": "us6000nzfk",
+"geometry": {
+"type": "Point",
+"coordinates": [
+54.0875,
+37.6024,
+10
+]
+},
+"properties": {
+"mag": 4.2,
+"place": "90 km NNW of Gorgān, Iran",
+"time": 1729204638780,
+"magType": "mb"
+}
+},
+{
+"type": "Feature",
+"id": "us7000ncuw",
+"geometry": {
+"type": "Point",
+"coordinates": [
+49.923,
+28.1209,
+10
+]
+},
+"properties": {
+"mag": 4.1,
+"place": "118 km E of As Saffānīyah, Saudi Arabia",
+"time": 1723929193783,
+"magType": "mb"
+}
+},
+{
+"type": "Feature",
+"id": "us6000n8tc",
+"geometry": {
+"type": "Point",
+"coordinates": [
+48.5051,
+38.7363,
+10
+]
+},
+"properties": {
+"mag": 4.8,
+"place": "8 km ESE of Lerik, Azerbaijan",
+"time": 1719546203250,
+"magType": "mb"
+}
+}
+]
+}
