@@ -356,6 +356,12 @@ Earthquake data is informational, can be delayed and is revised by the sources; 
 each source's terms of use: IRSC data is licensed for non-commercial, humanitarian use and must cite the Iranian
 Seismological Center (University of Tehran).
 
+## Author
+
+<a href="https://www.linkedin.com/in/sepehr-radmard"><img src="https://raw.githubusercontent.com/sepehr071/awesome-iran-mcp/main/assets/author-banner.png" alt="Sepehr Radmard: open-source MCP servers for the Iranian web. LinkedIn: linkedin.com/in/sepehr-radmard" width="100%"></a>
+
+Built and maintained by **Sepehr Radmard** (سپهر رادمرد). Connect on [LinkedIn](https://www.linkedin.com/in/sepehr-radmard) or follow [@sepehr071 on GitHub](https://github.com/sepehr071) for more MCP servers for Iranian websites, all listed in [awesome-iran-mcp](https://github.com/sepehr071/awesome-iran-mcp). If this saves you time, a star on the repo helps other people find it.
+
 ## License
 
 [MIT](https://github.com/sepehr071/iran-quake-mcp/blob/main/LICENSE)
