@@ -1,6 +1,6 @@
 [project]
 name = "iran-quake-mcp"
-version = "0.1.1"
+version = "0.1.2"
 description = "Unofficial read-only MCP server for earthquakes in Iran: latest, search, strongest, detail and statistics from USGS, EMSC and IRSC."
 readme = "README.md"
 license = "MIT"
