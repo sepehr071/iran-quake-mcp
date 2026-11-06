@@ -36,7 +36,7 @@ async def test_latest_emsc(client, api):
     api[PATH] = fixture("emsc_query.json")
     data = await call(client, "eq_latest", {"source": "emsc"})
     e = data["events"][0]
-    assert e["source"] == "emsc" and e["depth_km"] == 10.0 and e["place"] == "SOUTHERN IRAN"
+    assert e["depth_km"] == 10.0 and e["place"] == "SOUTHERN IRAN"
     assert e["time_tehran"] == "2026-10-17T01:00:26"
     q = api.calls[0].url.params
     assert q["minmag"] == "3.0" and "minmagnitude" not in q
@@ -182,7 +182,7 @@ async def test_irsc_latest_and_filters(client, api):
     data = await call(client, "eq_latest", {"source": "irsc", "min_magnitude": 3.3, "hours": 720})
     assert [e["id"] for e in data["events"]][:3] == ["213536", "213530", "213529"]
     e = data["events"][0]
-    assert e["source"] == "irsc" and e["place"] == "Roydar, Hormozgan" and e["time_tehran"] == "2026-10-18T10:04:25"
+    assert e["place"] == "Roydar, Hormozgan" and e["time_tehran"] == "2026-10-18T10:04:25"
     assert "irsc.ut.ac.ir" in str(api.calls[0].url) and str(api.calls[0].url).startswith("http://")
     assert all("Iraq" not in e["place"] for e in data["events"])  # iran_only drops Kifri, Iraq
     data = await call(client, "eq_search", {"start_date": "2026-10-16T16:00", "source": "irsc", "place": "hormozgan"})

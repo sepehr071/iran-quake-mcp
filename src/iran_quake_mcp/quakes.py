@@ -59,23 +59,17 @@ PROVINCES |= {"sistan": PROVINCES["sistan and baluchestan"], "khorasan": PROVINC
 
 Source = Annotated[
     Literal["usgs", "emsc", "irsc"],
-    Field(
-        description="Data source: 'usgs' (USGS ComCat, default), 'emsc' (EMSC via SeismicPortal) or 'irsc' (Iranian "
-        "Seismological Center, only its latest ~20 events, with province names). Magnitudes and locations differ "
-        "slightly between them; ids are not interchangeable."
-    ),
+    Field(description="'usgs' (default), 'emsc' or 'irsc' (Iranian Seismological Center, latest ~20 events only)."),
 ]
 IranOnly = Annotated[
     bool,
     Field(
-        description="True (default): keep only events inside a coarse Iran outline (lat/lon, includes Iranian waters) "
-        "whose place text names Iran (or Persian Gulf, Gulf of Oman, Caspian Sea); neighbours across the border "
-        "are dropped. False: everything in the bounding box."
+        description="True: only events inside Iran (outline plus place text, incl. its waters). False: whole bounding box."
     ),
 ]
 Limit = Annotated[
     int,
-    Field(ge=1, le=MAX_LIMIT, description=f"Max events to return, 1-{MAX_LIMIT} (a reply stays under 15 KB), e.g. 20."),
+    Field(ge=1, le=MAX_LIMIT, description=f"Max events, 1-{MAX_LIMIT}."),
 ]
 
 
@@ -107,9 +101,9 @@ def _event(source: str, f: dict[str, Any]) -> dict[str, Any]:
         "time_tehran": _fmt(t, TEHRAN),
         "magnitude": p.get("mag"),
         "mag_type": mag_type,
-        "depth_km": depth,
-        "lat": lat,
-        "lon": lon,
+        "depth_km": round(depth, 1) if depth is not None else None,
+        "lat": round(lat, 3),
+        "lon": round(lon, 3),
         "place": place,
     }
 
@@ -234,55 +228,53 @@ async def _events(
     return rows[:limit], len(rows) > limit or full
 
 
+def _listed(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """List rows without the per-row `source` (the reply carries it once)."""
+    return [{k: v for k, v in e.items() if k != "source"} for e in events]
+
+
 def _since(hours: float) -> str:
     return _fmt(datetime.now(timezone.utc) - timedelta(hours=hours))
 
 
 @tool("Latest earthquakes")
 async def eq_latest(
-    min_magnitude: Annotated[float, Field(ge=0, le=9, description="Minimum magnitude, e.g. 3.0.")] = 3.0,
-    hours: Annotated[int, Field(ge=1, le=720, description="Look back this many hours, e.g. 24.")] = 24,
+    min_magnitude: Annotated[float, Field(ge=0, le=9, description="Minimum magnitude.")] = 3.0,
+    hours: Annotated[int, Field(ge=1, le=720, description="Look back, hours.")] = 24,
     limit: Limit = 20,
     source: Source = "usgs",
     iran_only: IranOnly = True,
 ) -> dict[str, Any]:
     """List the most recent earthquakes in Iran, newest first.
 
-    Use for "was there an earthquake today?". Times: time_utc and time_tehran (UTC+03:30); depth_km in km;
-    magnitude type in mag_type (mb, ml, mw...). Call eq_detail with an id for more, eq_stats for counts.
+    Use for "was there an earthquake today?". Call eq_detail with an id for more.
     """
     events, more = await _events(source, start=_since(hours), min_mag=min_magnitude, limit=limit, iran_only=iran_only)
-    return {"source": source, "count": len(events), "more": more, "events": events}
+    return {"source": source, "count": len(events), "more": more, "events": _listed(events)}
 
 
 @tool("Search earthquakes")
 async def eq_search(
-    start_date: Annotated[
-        str, Field(description="Start, UTC: 'YYYY-MM-DD' or 'YYYY-MM-DDTHH:MM:SS', e.g. '2026-10-01'.")
-    ],
+    start_date: Annotated[str, Field(description="UTC 'YYYY-MM-DD' or 'YYYY-MM-DDTHH:MM:SS'.")],
     end_date: Annotated[
         str | None,
-        Field(
-            description="End, UTC, same format, e.g. '2026-10-15' (a date alone includes that whole day). Default: now."
-        ),
+        Field(description="UTC, same format (a date alone includes that day). Default: now."),
     ] = None,
-    min_magnitude: Annotated[float | None, Field(ge=0, le=10, description="Minimum magnitude, e.g. 4.5.")] = None,
-    max_magnitude: Annotated[float | None, Field(ge=0, le=10, description="Maximum magnitude, e.g. 6.")] = None,
+    min_magnitude: Annotated[float | None, Field(ge=0, le=10, description="Minimum magnitude.")] = None,
+    max_magnitude: Annotated[float | None, Field(ge=0, le=10, description="Maximum magnitude.")] = None,
     bbox: Annotated[
         str | None,
-        Field(
-            description="Box 'min_lat,min_lon,max_lat,max_lon', e.g. '35,50,36,52' (Tehran area). Default: all Iran."
-        ),
+        Field(description="'min_lat,min_lon,max_lat,max_lon', e.g. '35,50,36,52'. Default: all Iran."),
     ] = None,
     place: Annotated[
         str | None,
         Field(
-            description="Text the place must contain, case and accents ignored, e.g. 'Minab' or 'southern iran' (EMSC region); IRSC places are 'Town, Province'. A province name (Tehran, Kerman, Hormozgan, Khuzestan, Fars, Sistan and Baluchestan, Kermanshah, Razavi Khorasan, East Azerbaijan, West Azerbaijan, Bushehr, Mazandaran) selects its approximate box instead. English names only."
+            description="English text the place must contain, accents/case ignored, e.g. 'Minab'. A province name (Tehran, Kerman, Hormozgan, Khuzestan, Fars, Sistan and Baluchestan, Kermanshah, Razavi Khorasan, East Azerbaijan, West Azerbaijan, Bushehr, Mazandaran) selects its approximate box."
         ),
     ] = None,
     order: Annotated[
         Literal["time", "magnitude"],
-        Field(description="'time' (newest first, default) or 'magnitude' (largest first)."),
+        Field(description="'time' newest first, or 'magnitude' largest first."),
     ] = "time",
     limit: Limit = 20,
     source: Source = "usgs",
@@ -290,11 +282,8 @@ async def eq_search(
 ) -> dict[str, Any]:
     """Search earthquakes in Iran by date range, magnitude, bounding box and place text.
 
-    Use for history ("M5+ in 2026", "quakes near Bam"). USGS and EMSC have no province field: USGS gives the nearest
-    town ('70 km NNE of Minab, Iran'), EMSC a region ('SOUTHERN IRAN'); filter by `place` (a province name works) or
-    `bbox`. source='irsc' only knows its latest ~20 events, so older dates give `more`=true with few rows.
-    Times: time_utc and time_tehran (UTC+03:30); depth_km in km. `more` = more results may exist beyond `limit`
-    (or beyond the newest 500 events scanned when filtering by place/iran_only: narrow the dates or bbox).
+    Use for history ("M5+ in 2026", "quakes near Bam"). `more` = more results may exist beyond `limit` (or beyond
+    the newest 500 events scanned when filtering by place/iran_only: narrow the dates or bbox).
     """
     start, end = _day(start_date, "start_date"), _day(end_date, "end_date") if end_date else None
     if end and len(end) == 10:  # a date-only end covers that whole day
@@ -315,25 +304,25 @@ async def eq_search(
         iran_only=iran_only,
         place=place,
     )
-    return {"source": source, "count": len(events), "more": more, "events": events}
+    return {"source": source, "count": len(events), "more": more, "events": _listed(events)}
 
 
 @tool("Significant earthquakes")
 async def eq_significant(
-    days: Annotated[int, Field(ge=1, le=3650, description="Look back this many days, e.g. 30.")] = 30,
-    min_magnitude: Annotated[float, Field(ge=3, le=9, description="Minimum magnitude, e.g. 5.0.")] = 5.0,
-    limit: Annotated[int, Field(ge=1, le=MAX_LIMIT, description=f"Max events to return, 1-{MAX_LIMIT}, e.g. 10.")] = 10,
+    days: Annotated[int, Field(ge=1, le=3650, description="Look back, days.")] = 30,
+    min_magnitude: Annotated[float, Field(ge=3, le=9, description="Minimum magnitude.")] = 5.0,
+    limit: Annotated[int, Field(ge=1, le=MAX_LIMIT, description=f"Max events, 1-{MAX_LIMIT}.")] = 10,
     source: Source = "usgs",
     iran_only: IranOnly = True,
 ) -> dict[str, Any]:
     """List the strongest recent earthquakes in Iran, largest magnitude first.
 
-    Use for "biggest earthquakes this month/year". Times in UTC and Tehran (UTC+03:30), depth_km in km.
+    Use for "biggest earthquakes this month/year".
     """
     events, more = await _events(
         source, start=_since(days * 24), min_mag=min_magnitude, order="magnitude", limit=limit, iran_only=iran_only
     )
-    return {"source": source, "count": len(events), "more": more, "events": events}
+    return {"source": source, "count": len(events), "more": more, "events": _listed(events)}
 
 
 @tool("Earthquake detail")
@@ -343,16 +332,14 @@ async def eq_detail(
         Field(
             min_length=4,
             pattern=r"^[A-Za-z0-9_-]+$",
-            description="Event id from another eq_ tool: USGS 'us6000u2w9', EMSC '20261016_0000282' or IRSC '213549'.",
+            description="Event id from another eq_ tool, e.g. 'us6000u2w9', '20261016_0000282', '213549'.",
         ),
     ],
 ) -> dict[str, Any]:
     """Get one earthquake in full: location, depth_km, magnitude type and source quality fields.
 
-    The source is detected from the id format (IRSC: plain number, found only in its latest ~20 events, adds
-    the nearest towns). USGS adds review status, shaking (felt reports, cdi, mmi),
-    tsunami flag, sig (significance 0-1000), nst (stations), gap (degrees), rms; EMSC adds the contributing
-    agency (catalog) and last update. Times in UTC and Tehran (UTC+03:30).
+    The source is detected from the id format (IRSC: plain number, only in its latest ~20 events). USGS adds
+    status, shaking (felt, cdi, mmi), tsunami, sig, nst, gap, rms; EMSC adds catalog and last update.
     """
     if re.fullmatch(r"\d{5,7}", event_id):  # IRSC ids are plain numbers; only its latest feed can be searched
         found = [r for r in _irsc_events(await fetch(IRSC_URL, text=True)) if r["id"] == event_id]
@@ -393,15 +380,15 @@ async def eq_detail(
 
 @tool("Earthquake statistics")
 async def eq_stats(
-    days: Annotated[int, Field(ge=1, le=365, description="Window length in days, ending now, e.g. 30.")] = 30,
-    min_magnitude: Annotated[float, Field(ge=0, le=9, description="Minimum magnitude counted, e.g. 3.0.")] = 3.0,
+    days: Annotated[int, Field(ge=1, le=365, description="Window, days, ending now.")] = 30,
+    min_magnitude: Annotated[float, Field(ge=0, le=9, description="Minimum magnitude.")] = 3.0,
     source: Source = "usgs",
     iran_only: IranOnly = True,
 ) -> dict[str, Any]:
     """Count earthquakes in Iran over a window: by magnitude band, by place, plus the strongest event.
 
-    Use for "how active has Iran been this month". Places are USGS nearest towns or EMSC regions (no province
-    data). `truncated` = the source returned its full 3000 rows before the Iran filter, so the count covers only the newest.
+    Use for "how active has Iran been this month". `truncated` = the source returned its full 3000 rows before
+    the Iran filter, so counts cover only the newest.
     """
     start = _since(days * 24)
     rows, truncated = await _events(
@@ -422,5 +409,5 @@ async def eq_stats(
         "truncated": truncated,
         "by_magnitude": {k: bands[k] for k in ("<3", "3-4", "4-5", "5-6", "6+") if bands[k]},
         "top_places": dict(places.most_common(10)),
-        "strongest": max(rows, key=lambda r: r["magnitude"], default=None),
+        "strongest": _listed([max(rows, key=lambda r: r["magnitude"])])[0] if rows else None,
     }
