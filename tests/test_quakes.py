@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 import httpx
 import pytest
 from conftest import FIXTURES, fixture
@@ -177,7 +179,14 @@ async def test_province_place(client, api):
     assert data["count"] == 0  # box match: the Tehran-box row is not in Khuzestan
 
 
-async def test_irsc_latest_and_filters(client, api):
+class _Oct19(datetime):
+    @classmethod
+    def now(cls, tz=None):
+        return datetime(2026, 10, 19, tzinfo=timezone.utc)
+
+
+async def test_irsc_latest_and_filters(client, api, monkeypatch):
+    monkeypatch.setattr(quakes, "datetime", _Oct19)  # the IRSC fixture is from 2026-10-18
     irsc(api)
     data = await call(client, "eq_latest", {"source": "irsc", "min_magnitude": 3.3, "hours": 720})
     assert [e["id"] for e in data["events"]][:3] == ["213536", "213530", "213529"]
