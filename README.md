@@ -176,26 +176,6 @@ The list tools (`eq_latest`, `eq_search`, `eq_significant`, `eq_stats`) take an 
 
 All 5 tools are annotated `readOnlyHint: true`.
 
-## How it works
-
-```text
-  AI agent  (Claude, Cursor, Copilot, ...)
-      │
-      │  MCP over stdio
-      ▼
-  iran-quake-mcp  (runs on your machine)
-      │
-      │  HTTPS (IRSC: plain HTTP)
-      ├──────▶  earthquake.usgs.gov   USGS FDSN event API
-      ├──────▶  www.seismicportal.eu  EMSC FDSN event API
-      └──────▶  irsc.ut.ac.ir         events_list.xml
-```
-
-`iran-quake-mcp` runs locally and calls the public feeds of USGS, EMSC and IRSC. It has no hosted server in between
-and no API key. It sends at most 2 requests at a time with a little jitter, keeps answers for 60 seconds,
-retries a failed GET up to 4 times (USGS sometimes answers a sporadic 502), caps a response body at 5 MB and only
-talks to those three hosts. It only reads.
-
 ## Good to know
 
 - **Times:** `time_utc` is UTC, `time_tehran` is UTC+03:30 (no daylight saving since 2022). Search dates are UTC. Depth is `depth_km`, positive.
